@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddNewListView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) private var dismiss
     @State private var name: String = ""
     @State private var selectedColor: Color = .yellow
@@ -27,7 +28,7 @@ struct AddNewListView: View {
                 TextField("New List", text: $name)
                     .multilineTextAlignment(.center)
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(colorScheme == .dark ? Color(.systemGray3) : Color(.systemGray6))
                     .cornerRadius(12)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)

@@ -15,39 +15,38 @@ struct HomeView: View {
     @State private var isPressed: Bool = false
     
     var body: some View {
-        NavigationStack{
-            VStack{
-                MyListView(myLists: myListResult)
-                //Spacer()
-                
-                Button {
-                    isPressed = true
-                } label: {
-                    HStack {
-                        Image(systemName: "plus.circle.fill")
-//                            .foregroundColor(.black)
-                        Text("New List").foregroundStyle(Color(.label))
-                    }
-                    .padding(.horizontal, 20)
+        NavigationStack {
+            MyListView(myLists: myListResult)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .safeAreaInset(edge: .bottom) {
+                    Button {
+                        isPressed = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                            Text("New List")
+                                .foregroundStyle(Color(.label))
+                        }
+                        .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .glassEffect()
-                }.tint(.blue)
-                .frame(maxWidth:.infinity , alignment: .trailing)
-                .padding()
-            }.sheet(isPresented: $isPressed){
-                NavigationView{
-                    AddNewListView{ name, color in
-                        do{
-                            try ReminderService.saveMyList(name,color)
-                        } catch {
-                            print(error)
+                    }
+                    .tint(.blue)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding()
+                }
+                .sheet(isPresented: $isPressed) {
+                    NavigationView {
+                        AddNewListView { name, color in
+                            do {
+                                try ReminderService.saveMyList(name, color)
+                            } catch {
+                                print(error)
+                            }
                         }
-                        
                     }
                 }
-            }
-        }
-        .padding()
+        }.padding()
     }
 }
 

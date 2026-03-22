@@ -15,19 +15,20 @@ struct HomeView: View {
     @State private var isPressed: Bool = false
     
     var body: some View {
-        NavigationStack {
-            MyListView(myLists: myListResult)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .safeAreaInset(edge: .bottom) {
-                    Button {
-                        isPressed = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "plus.circle.fill")
-                            Text("New List")
-                                .foregroundStyle(Color(.label))
-                        }
-                        .padding(.horizontal, 20)
+        NavigationStack{
+            VStack{
+                MyListView(myLists: myListResult)
+                //Spacer()
+                
+                Button {
+                    isPressed = true
+                } label: {
+                    HStack {
+                        Image(systemName: "plus.circle.fill")
+//                            .foregroundColor(.black)
+                        Text("New List").foregroundStyle(Color(.label))
+                    }
+                    .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .glassEffect()
                     }

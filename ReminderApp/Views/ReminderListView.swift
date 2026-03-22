@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct ReminderListView: View {
+    let reminders: FetchedResults<Reminder>
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List(reminders) {reminder in
+            ReminderCellView(reminder: reminder)
+        }
     }
 }
 
-#Preview {
-    ReminderListView()
-}
+//#Preview {
+//    ReminderListView()
+//}

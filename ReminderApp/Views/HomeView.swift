@@ -24,7 +24,7 @@ struct HomeView: View {
                     } label: {
                         HStack {
                             Image(systemName: "plus.circle.fill")
-                            Text("New List")
+                            Text("New Reminder")
                                 .foregroundStyle(Color(.label))
                         }
                         .padding(.horizontal, 20)

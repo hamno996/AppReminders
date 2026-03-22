@@ -26,3 +26,4 @@ extension MyList {
     @objc(removeReminders:)
     @NSManaged public func removeReminders(_ values: NSSet)
 }
+ 

@@ -11,9 +11,15 @@ struct MyListView: View {
     let myLists: FetchedResults<MyList>
     var body: some View {
        NavigationStack {
-           if myLists.isEmpty{
-               Spacer()
-               Text("No reminders found")
+           if myLists.isEmpty {
+               VStack {
+                   Spacer()
+                   Text("No reminders found")
+                       .font(.title2)
+                       .foregroundColor(.secondary)
+                   Spacer()
+               }
+               .frame(maxWidth: .infinity, maxHeight: .infinity)
            } else {
                ForEach(myLists){ myList in
                    NavigationLink(value: myList) {

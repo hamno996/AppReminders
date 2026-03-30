@@ -13,6 +13,10 @@ struct ReminderDetailView: View {
     @Binding var reminder: Reminder
     @State var editconfig: ReminderEditConfig = ReminderEditConfig()
     
+    private var isFormValid: Bool {
+        !editconfig.title.isEmpty
+    }
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -42,26 +46,62 @@ struct ReminderDetailView: View {
                                        displayedComponents: .hourAndMinute
                             )
                         }
+                        if let _ = reminder.list {
+                            Section {
+                                NavigationLink {
+                                    SelectListView(selectList: Binding(
+                                        get: { reminder.list! },
+                                        set: { reminder.list = $0 }
+                                    ))
+                                } label: {
+                                    HStack{
+                                        Text("List")
+                                        Spacer()
+                                        Text(reminder.list!.name!)
+                                    }
+                                }
+                            }
+                        }
                     }
-                }.listStyle(.insetGrouped)
-            }.onAppear {
-                editconfig = ReminderEditConfig(reminder: reminder)
+                  
+                }.onChange(of: editconfig.hasDate) {
+                    if editconfig.hasDate {
+                        editconfig.reminderDate = Date()
+                    }
+                }
+                .onChange(of: editconfig.hasTime) {
+                    if editconfig.hasTime {
+                        editconfig.reminderTime = Date()
+                    }
+                }
+                .listStyle(.insetGrouped)
             }
-            .toolbar{
-                ToolbarItem(placement: .principal) {
-                    Text("Details")
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing){
-                    Button("Done"){
-                        
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarLeading){
-                    Button("Cancel"){
-                        dismiss()
-                    }
+        }.onAppear {
+            editconfig = ReminderEditConfig(reminder: reminder)
+        }.toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Details")
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Done") {
+                        do {
+                            let _ = try ReminderService.updateReminder(reminder: reminder, editConfig: editconfig)
+                        } catch {
+                            print(error)
+                        }
+                        reminder.title = editconfig.title
+                        reminder.notes = editconfig.notes
+                        reminder.reminderDate = editconfig.hasDate ? editconfig.reminderDate : nil
+                        reminder.reminderTime = editconfig.hasTime ? editconfig.reminderTime : nil
+                        reminder.isCompleted = editconfig.isCompleted
+                    dismiss()
+                }.disabled(!isFormValid)
+            }
+            
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Cancel") {
+                    dismiss()
                 }
             }
         }

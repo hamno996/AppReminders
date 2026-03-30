@@ -7,9 +7,20 @@
 
 import SwiftUI
 
+enum ReminderCellEvents {
+    case onInfo
+    case onCeckedChange(Reminder, Bool)
+    case onSelect(Reminder)
+}
+
 struct ReminderCellView: View {
     let reminder: Reminder
+    let delay = Delay()
+    let isSelected: Bool
+    
     @State private var checked: Bool = false
+    
+    let onEvent: (ReminderCellEvents) -> Void
     
     private func formatDate(_ date: Date) -> String {
         if date.isToday {
@@ -23,11 +34,16 @@ struct ReminderCellView: View {
     
     var body: some View {
         HStack{
-            Image(systemName: checked ? "circle.inset.filled" :"circle")
+            Image(systemName: checked ? "checkmark.circle.fill" :"circle")
                 .font(.title2)
                 .opacity(0.4)
+                .foregroundColor(.blue)
                 .onTapGesture {
                     checked.toggle()
+                    delay.cancel()
+                    delay.performWork {
+                        onEvent(.onCeckedChange(reminder, checked))
+                    }
                 }
             
             VStack(alignment: .leading){
@@ -50,10 +66,19 @@ struct ReminderCellView: View {
                     .font(.caption)
                     .opacity(0.4)
             }
-        }
+            Spacer()
+            Image(systemName: "info.circle.fill")
+                .opacity(isSelected ? 1.0 : 0.0)
+                .onTapGesture {
+                    onEvent(.onInfo)
+                }
+        }.contentShape(Rectangle())
+            .onTapGesture {
+                onEvent(.onSelect(reminder))
+            }
     }
 }
 
 #Preview {
-    ReminderCellView(reminder: PreviewData.reminder)
+    ReminderCellView(reminder: PreviewData.reminder, isSelected: false, onEvent: { _ in})
 }
